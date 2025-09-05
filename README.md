@@ -12,6 +12,14 @@ FastAPI backend for Connectinno Notes App.
 
    FIREBASE_CREDENTIALS_JSON=app/firebase_key.json
 
+### Firebase Authentication Setup
+
+1. In the Firebase Console, go to **Authentication → Sign-in method**.
+2. Enable **Email/Password** sign-in.
+3. (Optional) Enable **Google** sign-in if you plan to use Google login in the frontend.
+4. Make sure the backend is configured to verify Firebase ID tokens using `firebase_key.json`.
+5. When calling secured endpoints (`/notes`), include the `Authorization: Bearer <ID token>` header obtained from the frontend after login.
+
 ## Setup
 
 1. Create a virtual environment:
@@ -35,3 +43,16 @@ pip install -r requirements.txt
 ```
     uvicorn app.main:app --reload
 ```
+
+## API Documentation
+
+- Swagger UI is accessible at `/docs`.
+- There is no Authorization button; when calling the endpoints, you must include the header: Authorization: Bearer <ID token>
+
+
+⚠️ **TEST NOTE FOR Swager UI**
+
+- The `/test/create_user` and `/test/signin` endpoints are **for testing purposes only**.
+- These endpoints are provided to create test users without a frontend.
+- In the actual application, user registration, login, and logout are handled through the frontend.
+

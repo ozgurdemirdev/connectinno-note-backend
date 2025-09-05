@@ -1,12 +1,57 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Header, Security
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from pydantic import BaseModel
 from app import crud, schemas
+from app.firebase import auth
 
 app = FastAPI()
 
-# Dummy user_id, ileride auth ile değişecek
-def get_current_user():
-    return "user_123"
+bearer_scheme = HTTPBearer()
 
+with open("description.txt", "r", encoding="utf-8") as f:
+    description = f.read()
+
+app = FastAPI(
+    title="Not Uygulaması API",
+    description=description,
+    version="1.0.0"
+)
+
+def get_current_user(authorization: str = Header(...)):
+    """
+    Authorization header: Bearer <Firebase ID token>
+    """
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Invalid auth header")
+    id_token = authorization.split(" ")[1]
+    try:
+        decoded_token = auth.verify_id_token(id_token)
+        uid = decoded_token["uid"]
+        return uid
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid Firebase token")
+
+# --- Test için create user endpoint ---
+@app.post("/test/create_user")
+def create_test_user(req: schemas.UserCreateRequest):
+    try:
+        user = auth.create_user(email=req.email, password=req.password)
+        custom_token = auth.get_user(user.uid)
+        return {"uid": user.uid, "custom_token": custom_token.decode()}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# --- Test için signin endpoint ---
+@app.post("/test/signin")
+def signin_user(req: schemas.SignInRequest):
+    try:
+        user = auth.get_user_by_email(req.email)
+        custom_token = auth.create_custom_token(user.uid)
+        return {"custom_token": custom_token.decode()}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# --- Notes endpoints ---
 @app.post("/notes", response_model=schemas.NoteOut)
 def create_note(note: schemas.NoteCreate, user_id: str = Depends(get_current_user)):
     return crud.create_note(user_id, note)

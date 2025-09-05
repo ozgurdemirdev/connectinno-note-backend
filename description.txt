@@ -1,0 +1,8 @@
+Not Backend API
+
+Notlar üzerinde CRUD işlemleri sağlayan endpoint’ler.
+Kullanıcı kimlik doğrulama Firebase ID token’ları ile yapılmaktadır.
+
+⚠️ TEST NOTU:
+Kullanıcı oluşturma, giriş ve çıkış işlemleri yalnızca test amaçlıdır.
+Asıl uygulamada kullanıcı kayıt, giriş ve çıkış işlemleri frontend üzerinden gerçekleştirilir.

@@ -2,6 +2,16 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
+# --- Test için kullanıcı oluşturma endpoint ---
+class UserCreateRequest(BaseModel):
+    email: str
+    password: str
+
+# --- Test için kullanıcı girişi endpoint ---
+class SignInRequest(BaseModel):
+    email: str
+    password: str
+
 class NoteCreate(BaseModel):
     title: str
     content: str
