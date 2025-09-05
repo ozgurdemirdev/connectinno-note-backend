@@ -1,6 +1,18 @@
-# connectinno-note-backend
-Backend API for a Flutter Notes App built with FastAPI and Firebase (CRUD, Auth, Sync).
+# Connectinno Notes Backend
 
-# Install
+FastAPI backend for Connectinno Notes App.
 
-pip install fastapi uvicorn python-dotenv firebase-admin pydantic
+## Setup
+
+1. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv\Scripts\activate  # use for Mac / Linux: venv/bin/activate
+
+2. Install requirements:
+    pip install -r requirements.txt
+
+3. Add Firebase credentials in .env (see .env.example)
+
+4. Run the server:
+    uvicorn app.main:app --reload
