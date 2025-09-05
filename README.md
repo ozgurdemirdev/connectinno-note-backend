@@ -25,22 +25,27 @@ FastAPI backend for Connectinno Notes App.
 1. Create a virtual environment:
 ```bash
     python -m venv venv
+```
     # Windows
+```bash
     venv\Scripts\activate
+```
     # Mac/Linux
+```bash
     source venv/bin/activate
 ```
+
     
 
 2. Install requirements:
-```
+```bash
 pip install -r requirements.txt
 ```
 
 3. Add Firebase credentials in .env (see .env.example)
 
 4. Run the server:
-```
+```bash
     uvicorn app.main:app --reload
 ```
 
