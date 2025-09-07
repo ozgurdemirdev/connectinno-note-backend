@@ -4,7 +4,10 @@ from datetime import datetime
 COLLECTION = "notes"
 
 def create_note(user_id, data):
-    doc_ref = db.collection(COLLECTION).document()
+    # Eğer data.id varsa docID olarak kullan, yoksa Firestore auto-id üretir
+    doc_id = getattr(data, "id", None) or db.collection(COLLECTION).document().id
+    doc_ref = db.collection(COLLECTION).document(doc_id)
+    
     note_data = {
         "title": data.title,
         "content": data.content,
@@ -12,8 +15,9 @@ def create_note(user_id, data):
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
     }
+    
     doc_ref.set(note_data)
-    return {**note_data, "id": doc_ref.id}
+    return {**note_data, "id": doc_id}
 
 def get_notes(user_id):
     notes = db.collection(COLLECTION).where("user_id", "==", user_id).stream()

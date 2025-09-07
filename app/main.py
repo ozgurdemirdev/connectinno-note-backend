@@ -28,7 +28,6 @@ def get_current_user(authorization: str = Header(...)):
             raise HTTPException(status_code=401, detail="No user ID in token")
         return uid
     except Exception as e:
-        # Development'da hata detayını göster
         import os
         if os.getenv("DEBUG", "False").lower() == "true":
             raise HTTPException(status_code=401, detail=f"Token validation failed: {str(e)}")
@@ -58,7 +57,7 @@ def signin_user(req: schemas.SignInRequest):
 # --- Notes endpoints ---
 @app.post("/notes", response_model=schemas.NoteOut)
 def create_note(note: schemas.NoteCreate, user_id: str = Depends(get_current_user)):
-    return crud.create_note(user_id, note)
+    return crud.create_note(user_id, note, doc_id=note.id)
 
 @app.get("/notes", response_model=list[schemas.NoteOut])
 def list_notes(user_id: str = Depends(get_current_user)):
