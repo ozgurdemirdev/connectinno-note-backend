@@ -5,8 +5,9 @@ from app.schemas import NoteCreate
 
 COLLECTION = "notes"
 
-def create_note(user_id, data: NoteCreate):
-    doc_ref = db.collection(COLLECTION).document(data.id)  # docID client tarafından
+def create_note(user_id, data, doc_id: str):
+    doc_ref = db.collection(COLLECTION).document(doc_id)
+
     note_data = {
         "title": data.title,
         "content": data.content,
@@ -14,6 +15,7 @@ def create_note(user_id, data: NoteCreate):
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
     }
+
     doc_ref.set(note_data)
     return {**note_data, "id": doc_ref.id}
 
