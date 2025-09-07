@@ -5,8 +5,8 @@ from app.schemas import NoteCreate
 
 COLLECTION = "notes"
 
-def create_note(user_id, data, doc_id: str):
-    doc_ref = db.collection(COLLECTION).document(doc_id)
+def create_note(user_id, data):
+    doc_ref = db.collection(COLLECTION).document(data.id)
 
     note_data = {
         "title": data.title,
