@@ -12,10 +12,12 @@ class SignInRequest(BaseModel):
     email: str
     password: str
 
+
 class NoteCreate(BaseModel):
+    id: str 
     title: str
     content: str
-
+    
 class NoteUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
