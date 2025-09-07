@@ -18,18 +18,22 @@ app = FastAPI(
 )
 
 def get_current_user(authorization: str = Header(...)):
-    """
-    Authorization header: Bearer <Firebase ID token>
-    """
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Invalid auth header")
     id_token = authorization.split(" ")[1]
     try:
         decoded_token = auth.verify_id_token(id_token)
-        uid = decoded_token["uid"]
+        uid = decoded_token.get("sub") or decoded_token.get("uid")
+        if not uid:
+            raise HTTPException(status_code=401, detail="No user ID in token")
         return uid
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid Firebase token")
+    except Exception as e:
+        # Development'da hata detayını göster
+        import os
+        if os.getenv("DEBUG", "False").lower() == "true":
+            raise HTTPException(status_code=401, detail=f"Token validation failed: {str(e)}")
+        else:
+            raise HTTPException(status_code=401, detail="Invalid Firebase token")
 
 # --- Test için create user endpoint ---
 @app.post("/test/create_user")
